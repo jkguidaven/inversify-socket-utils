@@ -13,9 +13,9 @@ import * as SocketIO from "socket.io";
 
 export class InversifySocketServer {
   public server: SocketIO.Server;
-  private container: inversify.Container;
+  private container: inversify.interfaces.Container;
 
-  constructor(container: inversify.Container, server: SocketIO.Server) {
+  constructor(container: inversify.interfaces.Container, server: SocketIO.Server) {
     this.container = container;
     this.server = server;
   }
