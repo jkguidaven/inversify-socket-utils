@@ -1,8 +1,27 @@
 import "reflect-metadata";
 import { interfaces as inversifyInterfaces } from "inversify";
-import { METADATA_KEY, NO_CONTROLLERS_FOUND } from "./constants";
+import { METADATA_KEY, NO_CONTROLLERS_FOUND, DUPLICATED_CONTROLLER_NAME } from "./constants";
 import { Interfaces } from "./interfaces";
 import { TYPE } from "./constants";
+
+export function bindAllControllerMetadataToContainer(container: inversifyInterfaces.Container) {
+  let arrayOfControllerMetadata: Interfaces.ControllerMetadata[] = Reflect.getMetadata(
+      METADATA_KEY.Controller,
+      Reflect
+  ) || [];
+
+  arrayOfControllerMetadata.forEach((metadata) => {
+      const constructor = metadata.target;
+
+      if (container.isBoundNamed(TYPE.Controller, metadata.target.name)) {
+          throw new Error(DUPLICATED_CONTROLLER_NAME(metadata.target.name));
+      }
+
+      container.bind<Interfaces.Controller>(TYPE.Controller)
+                    .to(constructor)
+                    .whenTargetNamed(metadata.target.name);
+  });
+}
 
 export function getControllersFromContainer(
   container: inversifyInterfaces.Container,
@@ -15,15 +34,6 @@ export function getControllersFromContainer(
   } else {
       return [];
   }
-}
-
-export function getControllersFromMetadata() {
-  const arrayOfControllerMetadata: Interfaces.ControllerMetadata[] = Reflect.getMetadata(
-    METADATA_KEY.Controller,
-    Reflect
-  ) || [];
-
-  return arrayOfControllerMetadata.map((metadata) => metadata.target);
 }
 
 export function getControllerMetadata(constructor: any) {

@@ -2,8 +2,13 @@ import "reflect-metadata";
 import * as inversify from "inversify";
 import { Interfaces } from "./interfaces";
 import { TYPE, ACTION_TYPE, PARAMETER_TYPE } from "./constants";
-import { getControllerMetadata, getActionMetadata, getParameterMetadata, getControllersFromContainer } from "./utils";
-import { Controller } from "./decorators";
+import {
+  bindAllControllerMetadataToContainer,
+  getControllerMetadata,
+  getActionMetadata,
+  getParameterMetadata,
+  getControllersFromContainer
+} from "./utils";
 import * as SocketIO from "socket.io";
 
 export class InversifySocketServer {
@@ -22,6 +27,7 @@ export class InversifySocketServer {
   }
 
   private registerControllers() {
+    bindAllControllerMetadataToContainer(this.container);
     const controllers = getControllersFromContainer(this.container, false);
 
     controllers.forEach((controller: Interfaces.Controller) => {
