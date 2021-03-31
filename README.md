@@ -22,11 +22,9 @@ Please refer to the [InversifyJS documentation](https://github.com/inversify/Inv
 Step 1: Create a controller.
 
 ```ts
-import { injectable } from "inversify";
 import { Controller, Payload, ConnectedSocket, OnConnect, OnDisconnect, OnMessage } from "inversify-socket-utils";
 import "reflect-metadata";
 
-@injectable()
 @Controller(
   '/namespace'
 )

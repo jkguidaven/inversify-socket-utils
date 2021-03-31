@@ -10,6 +10,7 @@ export function Controller(namespace: string) {
       target: target
     };
 
+    decorate(injectable(), target);
     Reflect.defineMetadata(METADATA_KEY.Controller, currentMetadata, target);
 
     const previousMetadata: Interfaces.ControllerMetadata[] = Reflect.getMetadata(
